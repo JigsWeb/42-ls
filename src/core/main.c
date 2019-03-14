@@ -19,26 +19,21 @@ char *create_pathname(char *name, struct dirent *dir)
 
 int is_dir(struct dirent *dir)
 {
-    return (dir->d_type == 4 && strcmp(dir->d_name, ".") && strcmp(dir->d_name, ".."));
+    return (dir->d_type == 4
+        && strcmp(dir->d_name, ".") && strcmp(dir->d_name, ".."));
 }
 
-int ft_ls(char *name, t_entry **e)
+int ft_ls(t_folder **flr)
 {
     DIR *d;
     struct dirent *dir;
 
-    if (!name)
+    if (!flr)
         return (0);
-    d = opendir(name);
+    d = opendir((*flr)->path);
     while((dir = readdir(d)))
-    {
-        printf("FILENAME: %s\n", dir->d_name);
-        // add_entry(e, create_entry(dir->d_name));
-        if (ls.opts->R && is_dir(dir))
-            ft_ls(create_pathname(name, dir), e);
-    }
+        parse_pathname(create_pathname((*flr)->path, dir), dir->d_name, &(*flr)->e, &(*flr)->flr);
     closedir(d);
-    free(name);
     return (1);
 }
 
@@ -47,8 +42,9 @@ int main(int argc, char const *argv[])
     (void)argc;
     ls.flr = NULL;
     ls.e = NULL;
+    ls.sk = 0;
     ls.opts = (t_opts*)malloc(sizeof(t_opts));
-    *((long long*)ls.opts) = 0;
+    *((long long*)&ls.opts) = 0;
     parse_args(argv);
     // t_entry *e = NULL;
     // ft_ls(strdup("test/"), &e);
