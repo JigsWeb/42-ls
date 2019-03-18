@@ -4,12 +4,14 @@
 # include <stddef.h>
 
 typedef struct  s_folder {
-    char            *path;
-    long int        mtime;
     struct s_entry  *e;
     struct s_folder *flr;
     struct s_folder *next;
     struct s_folder *prev;
+    char            *path;
+    long int        mtime;
+    unsigned int    err;
+    unsigned char   is_root:1;
 }               t_folder;
 
 t_folder *create_folder(char *path, long int mtime);

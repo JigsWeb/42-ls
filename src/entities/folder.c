@@ -12,6 +12,7 @@ t_folder *create_folder(char *path, long int mtime)
     new_folder->flr = NULL;
     new_folder->next = NULL;
     new_folder->prev = NULL;
+    new_folder->is_root = 0;
     return (new_folder);
 }
 

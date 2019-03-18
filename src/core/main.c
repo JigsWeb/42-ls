@@ -9,18 +9,12 @@ char *create_pathname(char *name, struct dirent *dir)
 
     if (!name)
         return (NULL);
-    if (name[ft_strlen(name) - 1] == '/')
+    if (name[strlen(name) - 1] == '/')
         return ft_strjoin(name, dir->d_name);
     tmp = ft_strjoin(name, "/");
     res = create_pathname(tmp, dir);
     free(tmp);
     return (res);
-}
-
-int is_dir(struct dirent *dir)
-{
-    return (dir->d_type == 4
-        && strcmp(dir->d_name, ".") && strcmp(dir->d_name, ".."));
 }
 
 int ft_ls(t_folder **flr)
@@ -30,24 +24,43 @@ int ft_ls(t_folder **flr)
 
     if (!flr)
         return (0);
-    d = opendir((*flr)->path);
+    if (!(d = opendir((*flr)->path)))
+        return (((*flr)->err = errno));
     while((dir = readdir(d)))
-        parse_pathname(create_pathname((*flr)->path, dir), dir->d_name, &(*flr)->e, &(*flr)->flr);
+        if(parse_pathname(create_pathname((*flr)->path, dir), dir->d_name, flr))
+            ft_ls(&(*flr)->flr);
+    print_folder(*flr);
     closedir(d);
     return (1);
 }
 
+void init(void)
+{
+    ls.sk = BY_NAME;
+    ls.flr = create_folder(".", 0);
+    ls.flr->is_root = 1;
+    if (!(ls.opts = (t_opts*)malloc(sizeof(t_opts))))
+        exit(1);
+    ls.opts->l = 0;
+    ls.opts->a = 0;
+    ls.opts->R = 0;
+    ls.opts->r = 0;
+}
+
 int main(int argc, char const *argv[])
 {
+    t_folder *flr;
+
     (void)argc;
-    ls.flr = NULL;
-    ls.e = NULL;
-    ls.sk = 0;
-    ls.opts = (t_opts*)malloc(sizeof(t_opts));
-    *((long long*)&ls.opts) = 0;
+    init();
     parse_args(argv);
-    // t_entry *e = NULL;
-    // ft_ls(strdup("test/"), &e);
+    flr = ls.flr->flr;
+
+    while (flr)
+    {
+        ft_ls(&flr);
+        flr = flr->next;
+    }
 
     return 0;
 }

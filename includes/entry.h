@@ -12,5 +12,6 @@ typedef struct s_entry {
 
 t_entry *create_entry(char *name, long int mtime);
 t_entry *add_entry(t_entry **e, t_entry *new);
+t_entry *add_entry_sk(t_entry **e, t_entry *new);
 
 #endif
