@@ -18,7 +18,7 @@ void print_folder(t_folder *flr)
 
     e = flr->e;
     if (!flr->is_root)
-        printf("%s:\n", flr->path);
+        printf("%s:\n", flr->name);
     while (e)
     {
         print_entry(e);

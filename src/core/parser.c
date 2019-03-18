@@ -40,6 +40,7 @@ int parse_pathname(char const *p, char *name, t_folder **flr)
     char        is_dir;
     char        is_lnk;
 
+	printf("SIZEOF %zu\n", sizeof(t_folder));
     is_dir = 0;
     if (((!(*flr)->is_root || ls.opts->l) && lstat(p, &s) == -1)
         || (!(is_lnk = S_ISLNK(s.st_mode)) && stat(p, &s) == -1))
@@ -47,7 +48,7 @@ int parse_pathname(char const *p, char *name, t_folder **flr)
     else if ((*flr)->is_root || ls.opts->a || name[0] != '.')
     {
         is_dir = !is_lnk && check_is_dir(s, name);
-        printf("%s\n", name);
+        // printf("%s\n", name);
         if (((*flr)->is_root && S_ISDIR(s.st_mode)) || is_dir)
             add_folder(&(*flr)->flr, create_folder((char*)p, s.st_mtime));
         if (!(*flr)->is_root || !is_dir)

@@ -1,7 +1,7 @@
 NAME = ft_ls
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-SRCS =  src/core/main.c src/core/parser.c src/core/printer.c \
+SRCS =  src/core/main.c src/core/parser.c src/core/printer.c src/core/sort.c \
 		src/entities/entry.c src/entities/folder.c \
 		src/utils/ft_memcpy.c src/utils/ft_strcpy.c src/utils/ft_strjoin.c \
 		src/utils/ft_strlen.c src/utils/ft_strcat.c src/utils/ft_strcmp.c

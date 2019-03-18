@@ -15,6 +15,7 @@
 # include "utils.h"
 
 typedef enum { BY_NAME, M_TIME } sortkey;
+typedef enum { FOLDER, ENTRY } entity;
 
 typedef struct  s_opts {
     unsigned char   l:1;
@@ -33,6 +34,7 @@ extern t_ls ls;
 
 int         parse_args(char const *argv[]);
 int         parse_pathname(char const *p, char *name, t_folder **flr);
+int			sort(entity e, void *current, void *new);
 void        print_entry(t_entry *e);
 void        print_folder(t_folder *flr);
 

@@ -24,10 +24,10 @@ int ft_ls(t_folder **flr)
 
     if (!flr)
         return (0);
-    if (!(d = opendir((*flr)->path)))
+    if (!(d = opendir((*flr)->name)))
         return (((*flr)->err = errno));
     while((dir = readdir(d)))
-        if(parse_pathname(create_pathname((*flr)->path, dir), dir->d_name, flr))
+        if(parse_pathname(create_pathname((*flr)->name, dir), dir->d_name, flr))
             ft_ls(&(*flr)->flr);
     print_folder(*flr);
     closedir(d);
