@@ -28,4 +28,4 @@ $(OBJSDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) -c $(CFLAGS) -I ./includes -o $@ $<	
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -fsanitize=address -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)

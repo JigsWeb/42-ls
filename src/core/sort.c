@@ -9,7 +9,7 @@ static unsigned char    by_mtime(t_entry *current, t_entry *new)
 
 static unsigned char    by_name(t_entry *current, t_entry *new)
 {
-    return ft_strcmp(current->name, new->name) < 0;
+    return ft_strcmp(current->path, new->path) < 0;
 }
 
 int                     sort(t_entry *current, t_entry *new)

@@ -14,7 +14,7 @@ int traverse(t_entry **flr)
 {
     DIR *d;
     struct dirent *dir;
-    // t_entry *e;
+    t_entry *e;
 
     if (!*flr)
         return (0);
@@ -25,13 +25,13 @@ int traverse(t_entry **flr)
             create_entry((*flr)->path, dir->d_name, 0, check_is_dir(dir)));
     print_folder(*flr);
     closedir(d);
-    // e = (*flr)->e;
-    // while (e)
-    // {
-    //     if (e->is_dir)
-    //         traverse(&e);
-    //     e = e->next;
-    // }
+    e = (*flr)->e;
+    while (e)
+    {
+        if (e->is_dir)
+            traverse(&e);
+        e = e->next;
+    }
     return (1);
 }
 
@@ -64,6 +64,5 @@ int main(int argc, char const *argv[])
             traverse(&e);
         e = e->next;
     }
-    exit(0);
     return 0;
 }
