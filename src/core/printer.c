@@ -4,7 +4,7 @@ t_ls ls;
 
 void print_entry(t_entry *e)
 {
-    if (!ls.opts->l)
+    if (!(ls.opts&OPT_l))
         printf("%s ", e->name);
     else {
         printf("%s\n", e->name);
@@ -12,19 +12,18 @@ void print_entry(t_entry *e)
     return ;
 }
 
-void print_folder(t_folder *flr)
+void print_folder(t_entry *flr)
 {
     t_entry *e;
 
     e = flr->e;
-    if (!flr->is_root)
-        printf("%s:\n", flr->name);
+    printf("%s:\n", flr->path);
     while (e)
     {
         print_entry(e);
         e = e->next;
     }
-    if (!ls.opts->l)
+    if (!(ls.opts&OPT_l))
         printf("\n");
     printf("\n");
 }

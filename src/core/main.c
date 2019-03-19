@@ -2,65 +2,68 @@
 
 t_ls ls;
 
-char *create_pathname(char *name, struct dirent *dir)
+static int check_is_dir(struct dirent *dir)
 {
-    char *tmp;
-    char *res;
-
-    if (!name)
-        return (NULL);
-    if (name[strlen(name) - 1] == '/')
-        return ft_strjoin(name, dir->d_name);
-    tmp = ft_strjoin(name, "/");
-    res = create_pathname(tmp, dir);
-    free(tmp);
-    return (res);
+    return (ls.opts&OPT_R
+        && dir->d_type == _DIR
+        && strcmp(dir->d_name, ".")
+        && strcmp(dir->d_name, ".."));
 }
 
-int ft_ls(t_folder **flr)
+int traverse(t_entry **flr)
 {
     DIR *d;
     struct dirent *dir;
+    // t_entry *e;
 
-    if (!flr)
+    if (!*flr)
         return (0);
-    if (!(d = opendir((*flr)->name)))
+    if (!(d = opendir((*flr)->path)))
         return (((*flr)->err = errno));
     while((dir = readdir(d)))
-        if(parse_pathname(create_pathname((*flr)->name, dir), dir->d_name, flr))
-            ft_ls(&(*flr)->flr);
+        add_entry(&(*flr)->e,
+            create_entry((*flr)->path, dir->d_name, 0, check_is_dir(dir)));
     print_folder(*flr);
     closedir(d);
+    // e = (*flr)->e;
+    // while (e)
+    // {
+    //     if (e->is_dir)
+    //         traverse(&e);
+    //     e = e->next;
+    // }
     return (1);
 }
 
 void init(void)
 {
     ls.sk = BY_NAME;
-    ls.flr = create_folder(".", 0);
-    ls.flr->is_root = 1;
-    if (!(ls.opts = (t_opts*)malloc(sizeof(t_opts))))
-        exit(1);
-    ls.opts->l = 0;
-    ls.opts->a = 0;
-    ls.opts->R = 0;
-    ls.opts->r = 0;
+    ls.opts = 0;
+    ls.e = NULL;
 }
 
 int main(int argc, char const *argv[])
 {
-    t_folder *flr;
+    t_entry *e;
 
     (void)argc;
     init();
     parse_args(argv);
-    flr = ls.flr->flr;
-
-    while (flr)
+    e = ls.e;
+    while (e)
     {
-        ft_ls(&flr);
-        flr = flr->next;
+        if (!e->is_dir)
+            print_entry(e);
+        e = e->next;
     }
-
+    printf("\n");
+    e = ls.e;
+    while (e)
+    {
+        if (e->is_dir)
+            traverse(&e);
+        e = e->next;
+    }
+    exit(0);
     return 0;
 }
